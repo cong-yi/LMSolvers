@@ -38,7 +38,7 @@ ENDIF(0)
 # until I find a way to set SUITESPARSE_PATH to some value in CMake's GUI
 # and then have this value be propagated to all paths depending on it (i.e.,
 # CHOLMOD_INCDIR, CHOLMOD_INCDIR, etc), it is defined to be empty.
-SET(SUITESPARSE_PATH "")
+SET(SUITESPARSE_PATH $ENV{SuiteSparse_DIR})
 
 SET(USE_ATA_QUADS 1 CACHE BOOL "Use quads to speed up the calculation of A^t*A?")
 OPTION(BUILD_DEMO "Build demo program?" TRUE)
@@ -53,7 +53,9 @@ IF(HAVE_MKL)
 ENDIF(HAVE_MKL)
 
 IF(HAVE_CHOLMOD)
-  SET(CHOLMOD_INCDIR ${SUITESPARSE_PATH}/CHOLMOD/Include CACHE PATH "Path to header files for the CHOLMOD library")
+  SET(TMP_DIR ${SUITESPARSE_PATH}/include/suitesparse)
+  STRING(REPLACE "\\" "/" TMP_DIR ${TMP_DIR})
+  SET(CHOLMOD_INCDIR ${TMP_DIR} CACHE PATH "Path to header files for the CHOLMOD library")
   SET(NEED_UFconfig TRUE)
 ENDIF(HAVE_CHOLMOD)
 
