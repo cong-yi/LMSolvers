@@ -1,4 +1,4 @@
-An easy-to-compile wrapper for [(sparseLM)](http://users.ics.forth.gr/~lourakis/sparseLM/) on Windows platform.
+An easy-to-compile wrapper for [sparseLM](http://users.ics.forth.gr/~lourakis/sparseLM/) on Windows platform.
 ===============
 
 # Prerequisites
