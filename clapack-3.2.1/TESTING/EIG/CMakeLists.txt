@@ -120,6 +120,7 @@ set(ZEIGTST  zchkee.c
 macro(add_eig_executable name )
   add_executable(${name} ${ARGN})
   target_link_libraries(${name} tmglib lapack )
+  set_target_properties(${name} PROPERTIES FOLDER CLAPACK)
 endmacro(add_eig_executable)
 
 add_eig_executable(xeigtsts ${SEIGTST} ${SCIGTST} ${AEIGTST} 

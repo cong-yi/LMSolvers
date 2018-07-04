@@ -66,4 +66,4 @@ if(BUILD_COMPLEX16)
   set(ALLOBJ $(ZMATGEN) $(DZATGEN))
 endif()
 add_library(tmglib ${ALLOBJ} )
-
+set_target_properties(tmglib PROPERTIES FOLDER CLAPACK)

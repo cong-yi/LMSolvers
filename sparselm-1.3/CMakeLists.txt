@@ -233,6 +233,7 @@ MESSAGE(STATUS "splm library include paths: ${INCLUDES}")
 
 # splm library
 ADD_LIBRARY(splm STATIC ${SRCS} compiler.h splm.h splm_priv.h)
+set_target_properties(splm PROPERTIES FOLDER splm)
 
 # demo program
 IF(BUILD_DEMO)

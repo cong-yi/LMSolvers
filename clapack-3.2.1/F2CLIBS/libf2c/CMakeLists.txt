@@ -44,6 +44,7 @@ if(UNIX)
 endif()
 set_target_properties(arithchk PROPERTIES COMPILE_DEFINITIONS 
   "NO_FPINIT;NO_LONG_LONG")
+set_target_properties(arithchk PROPERTIES FOLDER CLAPACK)
 ADD_CUSTOM_COMMAND(
    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/arith.h
    COMMAND arithchk > ${CMAKE_CURRENT_BINARY_DIR}/arith.h
@@ -60,3 +61,4 @@ include_directories(${CLAPACK_SOURCE_DIR}/F2CLIBS/libf2c)
 include_directories(${CLAPACK_BINARY_DIR}/F2CLIBS/libf2c)
 add_library(f2c ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
 set_property(TARGET f2c PROPERTY PREFIX lib)
+set_target_properties(f2c PROPERTIES FOLDER CLAPACK)

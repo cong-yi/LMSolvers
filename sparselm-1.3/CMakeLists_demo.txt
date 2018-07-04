@@ -2,7 +2,7 @@
 
 ######################### START OF CONFIGURATION OPTIONS #########################
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) # location of splm.h
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}) # location of splm.h
 
 IF(CMAKE_GENERATOR MATCHES "^Visual Studio *")
   # get rid of CRT warnings
@@ -34,19 +34,19 @@ IF(HAVE_MKL)
 ENDIF(HAVE_MKL)
 
 IF(HAVE_CHOLMOD)
-  SET(CHOLMOD_LIBDIR ${SUITESPARSE_PATH}/CHOLMOD/Lib CACHE PATH "Path to library files for the CHOLMOD library")
+  SET(CHOLMOD_LIBDIR ${SUITESPARSE_PATH}/include/suitesparse CACHE PATH "Path to library files for the CHOLMOD library")
 ENDIF(HAVE_CHOLMOD)
 
 IF(HAVE_CSPARSE)
-  SET(CSPARSE_LIBDIR ${SUITESPARSE_PATH}/CSparse/Lib CACHE PATH "Path to library files for the CSparse library")
+  SET(CSPARSE_LIBDIR ${SUITESPARSE_PATH}/Lib CACHE PATH "Path to library files for the CSparse library")
 ENDIF(HAVE_CSPARSE)
 
 IF(HAVE_LDL)
-  SET(LDL_LIBDIR ${SUITESPARSE_PATH}/LDL/Lib CACHE PATH "Path to library files for the LDL library")
+  SET(LDL_LIBDIR ${SUITESPARSE_PATH}/Lib CACHE PATH "Path to library files for the LDL library")
 ENDIF(HAVE_LDL)
 
 IF(HAVE_UMFPACK)
-  SET(UMFPACK_LIBDIR ${SUITESPARSE_PATH}/UMFPACK/Lib CACHE PATH "Path to library files for the UMFPACK library")
+  SET(UMFPACK_LIBDIR ${SUITESPARSE_PATH}/Lib CACHE PATH "Path to library files for the UMFPACK library")
 ENDIF(HAVE_UMFPACK)
 
 IF(HAVE_PARDISO)
@@ -72,11 +72,11 @@ IF(HAVE_MUMPS)
 ENDIF(HAVE_MUMPS)
 
 IF(HAVE_MA77)
-  SET(MA77_LIBDIR ""CACHE PATH "Path to library files for the MA77 library")
+  SET(MA77_LIBDIR "" CACHE PATH "Path to library files for the MA77 library")
 ENDIF(HAVE_MA77)
 
 IF(NEED_AMD)
-  SET(AMD_LIBDIR ${SUITESPARSE_PATH}/AMD/Lib/ CACHE PATH "Path to library files for the AMD library")
+  SET(AMD_LIBDIR ${SUITESPARSE_PATH}/Lib/ CACHE PATH "Path to library files for the AMD library")
 ENDIF(NEED_AMD)
 
 IF(NEED_METIS)
@@ -168,7 +168,7 @@ ENDIF(HAVE_MKL)
 # ordering options
 IF(NEED_AMD)
   LINK_DIRECTORIES(${AMD_LIBDIR})
-  SET(AMD_LIBS "libccolamd;libcolamd;libcamd;libamd" CACHE STRING "Names for the AMD libraries")
+  SET(AMD_LIBS "libccolamd;libcolamd;libcamd;libamd" CACHE STRING "Names for the AMD libraries" FORCE)
 ENDIF(NEED_AMD)
 
 IF(NEED_METIS)
@@ -187,10 +187,12 @@ IF(NEED_F2C)
 ELSE(NEED_F2C)
   SET(LIBS ${LIBS} ${LAPACKBLAS_LIB_NAMES})
 ENDIF(NEED_F2C)
-
+link_directories($ENV{SuiteSparse_DIR}/lib)
 ADD_EXECUTABLE(splmdemo splmdemo.c)
-TARGET_LINK_LIBRARIES(splmdemo ${LIBS})
-
+TARGET_LINK_LIBRARIES(splmdemo
+		debug blas lapack splm libcholmodd.lib suitesparseconfigd.lib libamdd.lib libcamdd.lib libccolamdd.lib libcolamdd.lib metisd.lib
+		optimized blas lapack splm libcholmod.lib suitesparseconfig.lib libamd.lib libcamd.lib libccolamd.lib libcolamd.lib metis.lib)
+set_target_properties(splmdemo PROPERTIES FOLDER splm)
 # collect library paths, for debugging purposes only
 SET(LIBDIRS ${CSPARSE_LIBDIR} ${LDL_LIBDIR} ${CHOLMOD_LIBDIR} ${PARDISO_LIBDIR}
   ${SuperLU_LIBDIR} ${UMFPACK_LIBDIR} ${TAUCS_LIBDIR} ${SPOOLES_LIBDIR}
