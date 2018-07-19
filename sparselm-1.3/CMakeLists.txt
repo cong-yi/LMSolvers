@@ -230,11 +230,15 @@ ENDIF(HAVE_MA77)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) # splm.h
 INCLUDE_DIRECTORIES(${INCLUDES})
 MESSAGE(STATUS "splm library include paths: ${INCLUDES}")
-
+link_directories($ENV{SuiteSparse_DIR}/lib)
 # splm library
-ADD_LIBRARY(splm STATIC ${SRCS} compiler.h splm.h splm_priv.h)
-set_target_properties(splm PROPERTIES FOLDER splm)
-
+ADD_LIBRARY(splm SHARED ${SRCS} compiler.h splm.h splm_priv.h)
+set_property(TARGET splm PROPERTY DEBUG_OUTPUT_NAME splmd)
+set_property(TARGET splm PROPERTY RELEASE_OUTPUT_NAME splm)
+add_definitions(-DDLL_EXPORT)
+TARGET_LINK_LIBRARIES(splm PRIVATE
+		debug blas lapack libcholmodd.lib suitesparseconfigd.lib libamdd.lib libcamdd.lib libccolamdd.lib libcolamdd.lib metisd.lib
+		optimized blas lapack libcholmod.lib suitesparseconfig.lib libamd.lib libcamd.lib libccolamd.lib libcolamd.lib metis.lib)
 # demo program
 IF(BUILD_DEMO)
   INCLUDE("CMakeLists_demo.txt")

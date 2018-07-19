@@ -6,6 +6,10 @@ if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /bigobj") ### Enable parallel compilation
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR} )
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} )
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") #### eigen requires a modern C++ compiler that supports c++11
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../" )
@@ -13,17 +17,6 @@ else()
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations -Wno-unused-parameter -Wno-deprecated-register -Wno-return-type-c-linkage")
 endif()
 
-add_subdirectory(sparselm-1.3)
-
 set(CLAPACK_PATH ${PROJECT_SOURCE_DIR}/clapack-3.2.1)
-
 add_subdirectory(${CLAPACK_PATH})
-
-include_directories(${PROJECT_SOURCE_DIR}/sparselm-1.3)
-
-link_directories($ENV{SuiteSparse_DIR}/lib)
-add_library(SparseLM sparselm.h sparselm.cpp)
-add_definitions(-DDLL_EXPORT)
-TARGET_LINK_LIBRARIES(SparseLM 
-		debug blas lapack splm libcholmodd.lib suitesparseconfigd.lib libamdd.lib libcamdd.lib libccolamdd.lib libcolamdd.lib metisd.lib
-		optimized blas lapack splm libcholmod.lib suitesparseconfig.lib libamd.lib libcamd.lib libccolamd.lib libcolamd.lib metis.lib)
+add_subdirectory(sparselm-1.3)

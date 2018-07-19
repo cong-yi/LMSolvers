@@ -1,3 +1,28 @@
+#if defined _WIN32 || defined __CYGWIN__
+#ifdef DLL_EXPORT
+#ifdef __GNUC__
+#define DLL_PUBLIC __attribute__ ((dllexport))
+#else
+#define DLL_PUBLIC __declspec(dllexport) // Note: actually gcc seems to also supports this syntax.
+#endif
+#else
+#ifdef __GNUC__
+#define DLL_PUBLIC __attribute__ ((dllimport))
+#else
+#define DLL_PUBLIC __declspec(dllimport) // Note: actually gcc seems to also supports this syntax.
+#endif
+#endif
+#define DLL_LOCAL
+#else
+#if __GNUC__ >= 4
+#define DLL_PUBLIC __attribute__ ((visibility ("default")))
+#define DLL_LOCAL  __attribute__ ((visibility ("hidden")))
+#else
+#define DLL_PUBLIC
+#define DLL_LOCAL
+#endif
+#endif
+
 /*
 /////////////////////////////////////////////////////////////////////////////////////////////
 //// 
@@ -89,72 +114,72 @@ struct splm_ccsm{
 
 /* sparse LM for functions with CRS and CCS Jacobians */
 
-extern int sparselm_dercrs(
+DLL_PUBLIC extern int sparselm_dercrs(
        void (*func)(double *p, double *hx, int nvars, int nobs, void *adata),
        void (*fjac)(double *p, struct splm_crsm *jac, int nvars, int nobs, void *adata),
        double *p, double *x, int nvars, const int nconvars, int nobs, int Jnnz, int JtJnnz,
        int itmax, double opts[SPLM_OPTS_SZ], double info[SPLM_INFO_SZ], void *adata);
 
-extern int sparselm_derccs(
+DLL_PUBLIC extern int sparselm_derccs(
        void (*func)(double *p, double *hx, int nvars, int nobs, void *adata),
        void (*fjac)(double *p, struct splm_ccsm *jac, int nvars, int nobs, void *adata),
        double *p, double *x, int nvars, const int nconvars, int nobs, int Jnnz, int JtJnnz,
        int itmax, double opts[SPLM_OPTS_SZ], double info[SPLM_INFO_SZ], void *adata);
 
-extern int sparselm_difcrs(
+DLL_PUBLIC extern int sparselm_difcrs(
        void (*func)(double *p, double *hx, int nvars, int nobs, void *adata),
        void (*fjac)(double *p, struct splm_crsm *jac, int nvars, int nobs, void *adata),
        double *p, double *x, int nvars, const int nconvars, int nobs, int Jnnz, int JtJnnz,
        int itmax, double opts[SPLM_OPTS_SZ], double info[SPLM_INFO_SZ], void *adata);
 
-extern int sparselm_difccs(
+DLL_PUBLIC extern int sparselm_difccs(
        void (*func)(double *p, double *hx, int nvars, int nobs, void *adata),
        void (*fjac)(double *p, struct splm_ccsm *jac, int nvars, int nobs, void *adata),
        double *p, double *x, int nvars, const int nconvars, int nobs, int Jnnz, int JtJnnz,
        int itmax, double opts[SPLM_OPTS_SZ], double info[SPLM_INFO_SZ], void *adata);
 
 /* error checking for CRS and CCS Jacobians */
-extern void sparselm_chkjaccrs(
+DLL_PUBLIC extern void sparselm_chkjaccrs(
         void (*func)(double *p, double *hx, int m, int n, void *adata),
         void (*jacf)(double *p, struct splm_crsm *jac, int m, int n, void *adata),
         double *p, int m, int n, int jnnz, void *adata, double *err);
 
-extern void sparselm_chkjacccs(
+DLL_PUBLIC extern void sparselm_chkjacccs(
         void (*func)(double *p, double *hx, int m, int n, void *adata),
         void (*jacf)(double *p, struct splm_ccsm *jac, int m, int n, void *adata),
         double *p, int m, int n, int jnnz, void *adata, double *err);
 
 /* CRS sparse matrices manipulation routines */
-extern void splm_crsm_alloc(struct splm_crsm *sm, int nr, int nc, int nnz);
-extern void splm_crsm_alloc_novalues(struct splm_crsm *sm, int nr, int nc, int nnz);
-extern void splm_crsm_alloc_values(struct splm_crsm *sm);
-extern void splm_crsm_realloc_novalues(struct splm_crsm *sm, int nr, int nc, int nnz);
-extern void splm_crsm_free(struct splm_crsm *sm);
-extern int splm_crsm_elmidx(struct splm_crsm *sm, int i, int j);
-extern int splm_crsm_elmrow(struct splm_crsm *sm, int idx);
-extern int splm_crsm_row_elmidxs(struct splm_crsm *sm, int i, int *vidxs, int *jidxs);
-extern int splm_crsm_row_maxnelms(struct splm_crsm *sm);
-extern int splm_crsm_col_elmidxs(struct splm_crsm *sm, int j, int *vidxs, int *iidxs);
-extern void splm_crsm2ccsm(struct splm_crsm *crs, struct splm_ccsm *ccs);
-extern void splm_crsm_row_sort(struct splm_crsm *sm);
+DLL_PUBLIC extern void splm_crsm_alloc(struct splm_crsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_crsm_alloc_novalues(struct splm_crsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_crsm_alloc_values(struct splm_crsm *sm);
+DLL_PUBLIC extern void splm_crsm_realloc_novalues(struct splm_crsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_crsm_free(struct splm_crsm *sm);
+DLL_PUBLIC extern int splm_crsm_elmidx(struct splm_crsm *sm, int i, int j);
+DLL_PUBLIC extern int splm_crsm_elmrow(struct splm_crsm *sm, int idx);
+DLL_PUBLIC extern int splm_crsm_row_elmidxs(struct splm_crsm *sm, int i, int *vidxs, int *jidxs);
+DLL_PUBLIC extern int splm_crsm_row_maxnelms(struct splm_crsm *sm);
+DLL_PUBLIC extern int splm_crsm_col_elmidxs(struct splm_crsm *sm, int j, int *vidxs, int *iidxs);
+DLL_PUBLIC extern void splm_crsm2ccsm(struct splm_crsm *crs, struct splm_ccsm *ccs);
+DLL_PUBLIC extern void splm_crsm_row_sort(struct splm_crsm *sm);
 
 /* CCS sparse matrices manipulation routines */
-extern void splm_ccsm_alloc(struct splm_ccsm *sm, int nr, int nc, int nnz);
-extern void splm_ccsm_alloc_novalues(struct splm_ccsm *sm, int nr, int nc, int nnz);
-extern void splm_ccsm_alloc_values(struct splm_ccsm *sm);
-extern void splm_ccsm_realloc_novalues(struct splm_ccsm *sm, int nr, int nc, int nnz);
-extern void splm_ccsm_free(struct splm_ccsm *sm);
-extern int splm_ccsm_elmidx(struct splm_ccsm *sm, int i, int j);
-extern int splm_crsm_elmcol(struct splm_ccsm *sm, int idx);
-extern int splm_ccsm_row_elmidxs(struct splm_ccsm *sm, int i, int *vidxs, int *jidxs);
-extern int splm_ccsm_col_elmidxs(struct splm_ccsm *sm, int j, int *vidxs, int *iidxs);
-extern int splm_ccsm_col_maxnelms(struct splm_ccsm *sm);
-extern void splm_ccsm2crsm(struct splm_ccsm *ccs, struct splm_crsm *crs);
-extern int splm_ccsm_drop_cols(struct splm_ccsm *A, int ncols);
-extern void splm_ccsm_restore_cols(struct splm_ccsm *A, int ncols, int ncnnz);
-extern void splm_ccsm_col_sort(struct splm_ccsm *sm);
+DLL_PUBLIC extern void splm_ccsm_alloc(struct splm_ccsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_ccsm_alloc_novalues(struct splm_ccsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_ccsm_alloc_values(struct splm_ccsm *sm);
+DLL_PUBLIC extern void splm_ccsm_realloc_novalues(struct splm_ccsm *sm, int nr, int nc, int nnz);
+DLL_PUBLIC extern void splm_ccsm_free(struct splm_ccsm *sm);
+DLL_PUBLIC extern int splm_ccsm_elmidx(struct splm_ccsm *sm, int i, int j);
+DLL_PUBLIC extern int splm_crsm_elmcol(struct splm_ccsm *sm, int idx);
+DLL_PUBLIC extern int splm_ccsm_row_elmidxs(struct splm_ccsm *sm, int i, int *vidxs, int *jidxs);
+DLL_PUBLIC extern int splm_ccsm_col_elmidxs(struct splm_ccsm *sm, int j, int *vidxs, int *iidxs);
+DLL_PUBLIC extern int splm_ccsm_col_maxnelms(struct splm_ccsm *sm);
+DLL_PUBLIC extern void splm_ccsm2crsm(struct splm_ccsm *ccs, struct splm_crsm *crs);
+DLL_PUBLIC extern int splm_ccsm_drop_cols(struct splm_ccsm *A, int ncols);
+DLL_PUBLIC extern void splm_ccsm_restore_cols(struct splm_ccsm *A, int ncols, int ncnnz);
+DLL_PUBLIC extern void splm_ccsm_col_sort(struct splm_ccsm *sm);
 
-extern double splm_gettime(void);
+DLL_PUBLIC extern double splm_gettime(void);
 
 
 /* Sparse matrix representation using Sparse Triplet (ST) format.
@@ -174,15 +199,15 @@ struct splm_stm{
   double *val;  /* nonzero elements, NULL when only structure is stored */
 };
 
-extern void splm_stm_alloc(struct splm_stm *sm, int nr, int nc, int maxnnz);
-extern void splm_stm_allocval(struct splm_stm *sm, int nr, int nc, int maxnnz);
-extern void splm_stm_free(struct splm_stm *sm);
-extern int splm_stm_nonzero(struct splm_stm *sm, int i, int j);
-extern int splm_stm_nonzeroval(struct splm_stm *sm, int i, int j, double val);
-extern void splm_stm2ccsm(struct splm_stm *st, struct splm_ccsm *ccs);
-extern void splm_tri2ccsm(int *i, int *j, double *s, int m, int n, int nzmax, struct splm_ccsm *ccs);
-extern void splm_stm2crsm(struct splm_stm *st, struct splm_crsm *crs);
-extern void splm_tri2crsm(int *i, int *j, double *s, int m, int n, int nzmax, struct splm_crsm *crs);
+DLL_PUBLIC extern void splm_stm_alloc(struct splm_stm *sm, int nr, int nc, int maxnnz);
+DLL_PUBLIC extern void splm_stm_allocval(struct splm_stm *sm, int nr, int nc, int maxnnz);
+DLL_PUBLIC extern void splm_stm_free(struct splm_stm *sm);
+DLL_PUBLIC extern int splm_stm_nonzero(struct splm_stm *sm, int i, int j);
+DLL_PUBLIC extern int splm_stm_nonzeroval(struct splm_stm *sm, int i, int j, double val);
+DLL_PUBLIC extern void splm_stm2ccsm(struct splm_stm *st, struct splm_ccsm *ccs);
+DLL_PUBLIC extern void splm_tri2ccsm(int *i, int *j, double *s, int m, int n, int nzmax, struct splm_ccsm *ccs);
+DLL_PUBLIC extern void splm_stm2crsm(struct splm_stm *st, struct splm_crsm *crs);
+DLL_PUBLIC extern void splm_tri2crsm(int *i, int *j, double *s, int m, int n, int nzmax, struct splm_crsm *crs);
 
 
 #ifdef __cplusplus
