@@ -192,7 +192,7 @@ ADD_EXECUTABLE(splmdemo splmdemo.c)
 TARGET_LINK_LIBRARIES(splmdemo
 		debug blas lapack splm libcholmodd.lib suitesparseconfigd.lib libamdd.lib libcamdd.lib libccolamdd.lib libcolamdd.lib metisd.lib
 		optimized blas lapack splm libcholmod.lib suitesparseconfig.lib libamd.lib libcamd.lib libccolamd.lib libcolamd.lib metis.lib)
-set_target_properties(splmdemo PROPERTIES FOLDER splm)
+set_target_properties(splmdemo PROPERTIES FOLDER demo)
 # collect library paths, for debugging purposes only
 SET(LIBDIRS ${CSPARSE_LIBDIR} ${LDL_LIBDIR} ${CHOLMOD_LIBDIR} ${PARDISO_LIBDIR}
   ${SuperLU_LIBDIR} ${UMFPACK_LIBDIR} ${TAUCS_LIBDIR} ${SPOOLES_LIBDIR}

@@ -60,38 +60,22 @@ IF(HAVE_PLASMA)
 ENDIF(HAVE_PLASMA)
 
 # levmar library source files
-ADD_LIBRARY(levmar STATIC
+ADD_LIBRARY(levmar SHARED
   lm.c Axb.c misc.c lmlec.c lmbc.c lmblec.c lmbleic.c
   levmar.h misc.h compiler.h
 )
+set_property(TARGET levmar PROPERTY DEBUG_OUTPUT_NAME levmard)
+set_property(TARGET levmar PROPERTY RELEASE_OUTPUT_NAME levmar)
+add_definitions(-DLEVMAR_EXPORT)
+TARGET_LINK_LIBRARIES(levmar PRIVATE blas lapack)
 
 # demo program
 IF(BUILD_DEMO)
-  SET(LIBS levmar)
-
-  LINK_DIRECTORIES(${CMAKE_BINARY_DIR}) # location of the levmar library
-  LINK_DIRECTORIES(${LAPACKBLAS_DIR})
-
-# libraries the demo depends on
-  IF(HAVE_PLASMA)
-    LINK_DIRECTORIES(${PLASMA_DIR}/lib)
-    SET(LIBS ${LIBS} ${PLASMA_LIB_NAMES})
-  ENDIF(HAVE_PLASMA)
-
-  IF(HAVE_LAPACK)
-    IF(NEED_F2C)
-      SET(LIBS ${LIBS} ${LAPACKBLAS_LIB_NAMES} ${F2C_LIB_NAME})
-    ELSE(NEED_F2C)
-      SET(LIBS ${LIBS} ${LAPACKBLAS_LIB_NAMES})
-    ENDIF(NEED_F2C)
-  ENDIF(HAVE_LAPACK)
-
   ADD_EXECUTABLE(lmdemo lmdemo.c levmar.h)
-  TARGET_LINK_LIBRARIES(lmdemo ${LIBS})
-  MESSAGE(STATUS "lmdemo will be linked against ${LIBS}")
-
+  TARGET_LINK_LIBRARIES(lmdemo levmar)
 # make sure that the library is built before the demo
   ADD_DEPENDENCIES(lmdemo levmar)
+  set_target_properties(lmdemo PROPERTIES FOLDER demo)
 ENDIF(BUILD_DEMO)
 
 #SUBDIRS(matlab)
