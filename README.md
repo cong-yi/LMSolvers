@@ -1,4 +1,4 @@
-An easy-to-compile wrapper for [sparseLM](http://users.ics.forth.gr/~lourakis/sparseLM/) and levmar(http://users.ics.forth.gr/~lourakis/levmar/) on Windows platform.
+An easy-to-compile wrapper for [sparseLM](http://users.ics.forth.gr/~lourakis/sparseLM/) and [levmar](http://users.ics.forth.gr/~lourakis/levmar/) on Windows platform.
 ===============
 
 # Prerequisites
